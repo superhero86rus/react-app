@@ -7,6 +7,8 @@ import Body from './layouts/Body/Body';
 import Header from './components/Header/Header';
 import JournalList from './components/JournalList/JournalList';
 import JournalAddButton from './components/JournalAddButton/JournalAddButton';
+import { useState } from 'react';
+import JournalForm from './components/JournalForm/JournalForm';
 
 function App() {
 
@@ -53,7 +55,7 @@ function App() {
 			</LeftPanel>
 
 			<Body>
-        Body
+				<JournalForm/>
 			</Body>
 
 		</div>
