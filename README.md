@@ -12,3 +12,8 @@ cd react-app
 npm install
 npm run dev
 ```
+
+```txt
+statefull - сохраняющее состояние
+stateless - не имеет внутреннего состояния. Задается извне
+```

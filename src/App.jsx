@@ -1,37 +1,48 @@
 import './App.css';
-import Button from './components/Button/Button';
-import CardButton from './components/CardButton/CardButton';
-import JournalItem from './components/JournalItem/JournalItem';
 import LeftPanel from './layouts/LeftPanel/LeftPanel';
 import Body from './layouts/Body/Body';
 import Header from './components/Header/Header';
 import JournalList from './components/JournalList/JournalList';
 import JournalAddButton from './components/JournalAddButton/JournalAddButton';
-import { useState } from 'react';
 import JournalForm from './components/JournalForm/JournalForm';
+import { useState } from 'react';
+
+const INITIAL_DATA = [
+	{
+		id: 1,
+		title: 'Поход в горы',
+		post: 'Горные походы открывают удивительный ландшафт',
+		date: new Date()
+	},
+
+	{
+		id: 2, 
+		title: 'Катание на велосипеде',
+		post: 'Катание на велосипеде полезно для здоровья',
+		date: new Date()
+	},
+
+	{
+		id: 3,
+		title: 'Закаливание',
+		post: 'Принимать контрастный душ может быть не просто',
+		date: new Date()
+	}
+];
 
 function App() {
 
-	const data = [
-		{
-			title: 'Поход в горы',
-			text: 'Горные походы открывают удивительный ландшафт',
-			date: new Date()
-		},
+	const [items, setItems] = useState(INITIAL_DATA);
 
-		{
-			title: 'Катание на велосипеде',
-			text: 'Катание на велосипеде полезно для здоровья',
-			date: new Date()
-		},
-
-		{
-			title: 'Закаливание',
-			text: 'Принимать контрастный душ может быть не просто',
-			date: new Date()
-		}
-	];
-
+	const addItem = item => {
+		setItems(oldItems => [...oldItems, {
+			id: Math.max(...oldItems.map(i => i.id)) + 1,
+			post: item.text,
+			title: item.title,
+			date: new Date(item.date)
+		}]);
+	};
+	
 	return (
 
 		<div className='app'>
@@ -39,23 +50,11 @@ function App() {
 			<LeftPanel>
 				<Header/>
 				<JournalAddButton/>
-				<JournalList>
-					<CardButton>
-						<JournalItem title={data[0].title} text={data[0].text} date={data[0].date}/>
-					</CardButton>
-
-					<CardButton>
-						<JournalItem title={data[1].title} text={data[1].text} date={data[1].date}/>
-					</CardButton>
-
-					<CardButton>
-						<JournalItem title={data[2].title} text={data[2].text} date={data[2].date}/>
-					</CardButton>
-				</JournalList>
+				<JournalList items={items}/>
 			</LeftPanel>
 
 			<Body>
-				<JournalForm/>
+				<JournalForm onSubmit={addItem}/>
 			</Body>
 
 		</div>
