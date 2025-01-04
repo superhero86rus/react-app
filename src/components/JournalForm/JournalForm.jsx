@@ -1,16 +1,37 @@
 import styles from './JournalForm.module.css';
 import Button from '../Button/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import cn from 'classnames';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import InventoryIcon from '@mui/icons-material/Inventory';
+
+const INITIAL_STATE = {
+	title: true,
+	post: true,
+	date: true
+};
 
 function JournalForm({ onSubmit }) {
 
 	// Валидация полей
-	const [formValidState, setFormValidState] = useState({
-		title: true,
-		post: true,
-		date: true
-	});
+	const [formValidState, setFormValidState] = useState(INITIAL_STATE);
+
+	useEffect(() => {
+
+		let timerID;
+
+		if(!formValidState.date || !formValidState.post || !formValidState.title){
+			timerID = setTimeout(() => {
+				console.log('Очистка состояния');
+				setFormValidState(INITIAL_STATE);
+			}, 2000);
+		}
+
+		return () => {
+			clearTimeout(timerID);
+		};
+	}, [formValidState]);
 
 	const addJournalItem = (e) => {
 		e.preventDefault(); // Оставляет дефолтное поведение
@@ -43,13 +64,37 @@ function JournalForm({ onSubmit }) {
 	return (
 		<form className={styles['journal-form']} onSubmit={addJournalItem}>
 
-			<input type='text' name='title' className={cn(styles['input'], {
-				[styles['invalid']]: !formValidState.title
-			})} />
+			{/* Наименование */}
+			<div>
+				<input type='text' name='title' className={cn(styles['input-title'], {
+					[styles['invalid']]: !formValidState.title
+				})} />
+			</div>
 
-			<input type='date' name='date' className={`${styles['input']} ${formValidState.date ? '' : styles['invalid']}`} />
-			<input type='text' name='tag' />
-			<textarea name='post' id='multiline' rows='10' className={`${styles['input']} ${formValidState.post ? '' : styles['invalid']}`}></textarea>
+			{/* Дата*/}
+			<div className={styles['form-row']}>
+				<label htmlFor='date' className={styles['form-label']}>
+					<CalendarMonthIcon/>
+					<span>Дата</span>
+				</label>
+				<input type='date' name='date' id='date' className={cn(styles['input'], {
+					[styles['invalid']]: !formValidState.date
+				})} />
+			</div>
+
+			{/* Метки */}
+			<div className={styles['form-row']}>
+				<label htmlFor='tag' className={styles['form-label']}>
+					<FolderOpenIcon/>
+					<span>Метки</span>
+				</label>
+				<input type='text' name='tag' id='tag' className={styles['input']}/>
+			</div>
+
+			{/* Текст */}
+			<textarea name='post' id='multiline' rows='10' className={cn(styles['input'], {
+				[styles['invalid']]: !formValidState.post
+			})} ></textarea>
 			<Button text='Сохранить' />
 		</form>
 	);
