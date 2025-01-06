@@ -33,16 +33,26 @@ function JournalForm({ onSubmit }) {
 	}, [isValid]);
 
 	useEffect(() => {
-		if(isFormReadyToSubmit) onSubmit(values);
+		if(isFormReadyToSubmit) {
+			onSubmit(values);
+			dispatchForm({type: 'CLEAR'});
+			console.log('Clering state!');
+		}
+
 	}, [isFormReadyToSubmit]);
+
+	// Универсальный метод
+	const onChange = (e) => {
+		dispatchForm({type: 'SET_VALUE', payload: { [e.target.name] : e.target.value }});
+	};
 
 	const addJournalItem = (e) => {
 		e.preventDefault(); // Оставляет дефолтное поведение
 
-		const formData = new FormData(e.target);
-		const formProps = Object.fromEntries(formData);
+		// const formData = new FormData(e.target);
+		// const formProps = Object.fromEntries(formData);
 
-		dispatchForm({type: 'SUBMIT', payload: formProps});
+		dispatchForm({type: 'SUBMIT'});
 	};
 
 	return (
@@ -50,7 +60,7 @@ function JournalForm({ onSubmit }) {
 
 			{/* Наименование */}
 			<div>
-				<input type='text' name='title' className={cn(styles['input-title'], {
+				<input type='text' onChange={onChange} value={values.title} name='title' className={cn(styles['input-title'], {
 					[styles['invalid']]: !isValid.title
 				})} />
 			</div>
@@ -61,7 +71,7 @@ function JournalForm({ onSubmit }) {
 					<CalendarMonthIcon/>
 					<span>Дата</span>
 				</label>
-				<input type='date' name='date' id='date' className={cn(styles['input'], {
+				<input type='date' onChange={onChange} value={values.date} name='date' id='date' className={cn(styles['input'], {
 					[styles['invalid']]: !isValid.date
 				})} />
 			</div>
@@ -72,11 +82,11 @@ function JournalForm({ onSubmit }) {
 					<FolderOpenIcon/>
 					<span>Метки</span>
 				</label>
-				<input type='text' name='tag' id='tag' className={styles['input']}/>
+				<input type='text' onChange={onChange} value={values.tag} name='tag' id='tag' className={styles['input']}/>
 			</div>
 
 			{/* Текст */}
-			<textarea name='post' id='multiline' rows='10' className={cn(styles['input'], {
+			<textarea name='post' id='post' rows='10' onChange={onChange} value={values.post} className={cn(styles['input'], {
 				[styles['invalid']]: !isValid.post
 			})} ></textarea>
 			<Button text='Сохранить' />
