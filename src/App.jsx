@@ -5,58 +5,52 @@ import Header from './components/Header/Header';
 import JournalList from './components/JournalList/JournalList';
 import JournalAddButton from './components/JournalAddButton/JournalAddButton';
 import JournalForm from './components/JournalForm/JournalForm';
-import { useState, useEffect } from 'react';
+import { useLocalStorage } from './hooks/useLocalStorage.hook';
 
-const INITIAL_DATA = [
-	// {
-	// 	id: 1,
-	// 	title: 'Поход в горы',
-	// 	post: 'Горные походы открывают удивительный ландшафт',
-	// 	date: new Date()
-	// },
+// const INITIAL_DATA = [
+// {
+// 	id: 1,
+// 	title: 'Поход в горы',
+// 	post: 'Горные походы открывают удивительный ландшафт',
+// 	date: new Date()
+// },
 
-	// {
-	// 	id: 2, 
-	// 	title: 'Катание на велосипеде',
-	// 	post: 'Катание на велосипеде полезно для здоровья',
-	// 	date: new Date()
-	// },
+// {
+// 	id: 2, 
+// 	title: 'Катание на велосипеде',
+// 	post: 'Катание на велосипеде полезно для здоровья',
+// 	date: new Date()
+// },
 
-	// {
-	// 	id: 3,
-	// 	title: 'Закаливание',
-	// 	post: 'Принимать контрастный душ может быть не просто',
-	// 	date: new Date()
-	// }
-];
+// {
+// 	id: 3,
+// 	title: 'Закаливание',
+// 	post: 'Принимать контрастный душ может быть не просто',
+// 	date: new Date()
+// }
+// ];
+
+function mapItems(items) {
+	if(!items){
+		return [];
+	}
+
+	return items.map(i => ({
+		...i,
+		date: new Date(i.date)
+	}));
+}
 
 function App() {
 
-	const [items, setItems] = useState([]);
-
-	useEffect(() => {
-		const data = JSON.parse(localStorage.getItem('data'));
-		if(data){
-			setItems(data.map(item=>({
-				...item,
-				date: new Date(item.date)
-			})));
-		}else console.log('Нет данных в localStorage');
-	}, []);
-
-	useEffect(() => {
-		if(items.length){
-			console.log('Запись!');
-			localStorage.setItem('data', JSON.stringify(items));
-		}
-	}, [items]);
+	const [items, setItems] = useLocalStorage(['data']);
 
 	const addItem = item => {
-		setItems(oldItems => [...oldItems, {
-			id: Math.max(...oldItems.map(i => i.id)) + 1,
+		setItems([...mapItems(items), {
 			post: item.post,
 			title: item.title,
-			date: new Date(item.date)
+			date: new Date(item.date),
+			id: Math.max(...items.map(i => i.id)) + 1
 		}]);
 	};
 	
@@ -67,7 +61,7 @@ function App() {
 			<LeftPanel>
 				<Header/>
 				<JournalAddButton/>
-				<JournalList items={items}/>
+				<JournalList items={mapItems(items)}/>
 			</LeftPanel>
 
 			<Body>
