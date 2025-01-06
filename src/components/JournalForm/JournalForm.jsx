@@ -6,6 +6,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { INITIAL_STATE, formReducer} from './JournalForm.state';
+import Input from '../Input/Input';
 
 function JournalForm({ onSubmit }) {
 
@@ -82,9 +83,7 @@ function JournalForm({ onSubmit }) {
 
 			{/* Наименование */}
 			<div>
-				<input type='text' ref={titleRef} onChange={onChange} value={values.title} name='title' className={cn(styles['input-title'], {
-					[styles['invalid']]: !isValid.title
-				})} />
+				<Input type='text' ref={titleRef} isValid={isValid.title} onChange={onChange} value={values.title} name='title' appearance='title'/>
 			</div>
 
 			{/* Дата*/}
@@ -93,9 +92,7 @@ function JournalForm({ onSubmit }) {
 					<CalendarMonthIcon/>
 					<span>Дата</span>
 				</label>
-				<input type='date' ref={dateRef} onChange={onChange} value={values.date} name='date' id='date' className={cn(styles['input'], {
-					[styles['invalid']]: !isValid.date
-				})} />
+				<Input type='date' ref={dateRef} isValid={isValid.date} onChange={onChange} value={values.date} name='date' id='date' />
 			</div>
 
 			{/* Метки */}
@@ -104,7 +101,7 @@ function JournalForm({ onSubmit }) {
 					<FolderOpenIcon/>
 					<span>Метки</span>
 				</label>
-				<input type='text' onChange={onChange} value={values.tag} name='tag' id='tag' className={styles['input']}/>
+				<Input type='text' onChange={onChange} value={values.tag} name='tag' id='tag' />
 			</div>
 
 			{/* Текст */}
