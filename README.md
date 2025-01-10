@@ -17,6 +17,8 @@ npm run dev
 statefull - сохраняющее состояние
 stateless - не имеет внутреннего состояния. Задается извне
 
+Контекст - провайдер и консьюмер (потребитель)
+
 Хуки:
 
 useState - управление состоянием
@@ -32,4 +34,3 @@ const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
     функцию dispatch(actionObject), которая отправляет объект действия, например: actionObject - {type: 'CLEAR'}
 
 useRef - позволяет привязаться к элементу, который мы выберем в качестве reference
-```
