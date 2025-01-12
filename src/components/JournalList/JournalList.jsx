@@ -22,6 +22,7 @@ function JournalList({ items, setItem }) {
 		return <p>Записей пока нет. Добавьте первую...</p>;
 	}
 
+	console.log('filteredItems: ' + filteredItems);
 	return <>
 		{filteredItems
 			.map(el => (

@@ -4,12 +4,12 @@ import { useEffect, useReducer, useRef, useContext } from 'react';
 import cn from 'classnames';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-// import InventoryIcon from '@mui/icons-material/Inventory';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import { INITIAL_STATE, formReducer} from './JournalForm.state';
 import Input from '../Input/Input';
 import { UserContext } from '../../context/user.context';
 
-function JournalForm({ onSubmit, data }) {
+function JournalForm({ onSubmit, data , onDelete }) {
 
 	// Валидация полей
 	// const [formValidState, setFormValidState] = useState(INITIAL_STATE);
@@ -39,6 +39,11 @@ function JournalForm({ onSubmit, data }) {
 	};
 
 	useEffect(()=>{
+		if(!data) {
+			dispatchForm({type: 'CLEAR'});
+			dispatchForm({type: 'SET_VALUE', payload: { userId }});
+		}
+		
 		dispatchForm({type: 'SET_VALUE', payload: {...data}});
 	}, [data]);
 
@@ -89,14 +94,24 @@ function JournalForm({ onSubmit, data }) {
 		dispatchForm({type: 'SUBMIT'});
 	};
 
+	const deleteJournalItem = () => {
+		onDelete(data.id);
+		dispatchForm({type: 'CLEAR'});
+		dispatchForm({type: 'SET_VALUE', payload: { userId }});
+	};
+
 	return (
 		<form className={styles['journal-form']} onSubmit={addJournalItem}>
 
-			{ userId }
-
 			{/* Наименование */}
-			<div>
-				<Input appearance='title' type='text' ref={titleRef} isValid={isValid.title} onChange={onChange} value={values.title} name='title' appearance='title'/>
+			<div className={styles['form-row']}>
+				<Input appearance='title' type='text' ref={titleRef} isValid={isValid.title} onChange={onChange} value={values.title} name='title'/>
+				{
+					data?.id && 
+					<button className={styles['.delete']} type='button' onClick={deleteJournalItem}>
+						<InventoryIcon/>
+					</button>
+				}
 			</div>
 
 			{/* Дата*/}

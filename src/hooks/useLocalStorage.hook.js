@@ -16,5 +16,6 @@ export function useLocalStorage(key) {
 		setData(newData);
 	};
 
+	console.log('Data: ' + JSON.stringify(data));
 	return [data, saveData];
 }
