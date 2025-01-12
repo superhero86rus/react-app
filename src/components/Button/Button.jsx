@@ -1,4 +1,5 @@
 import './Button.css';
+import { memo } from 'react';
 
 function Button({ children, onClick }) {
 	console.log('Исполняется Button');
@@ -8,4 +9,4 @@ function Button({ children, onClick }) {
 	);
 }
 
-export default Button;
+export default memo(Button);

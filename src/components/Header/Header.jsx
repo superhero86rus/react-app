@@ -1,5 +1,5 @@
 import SelectUser from '../SelectUser/SelectUser';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Button from '../Button/Button';
 import Logo from '../Logo/Logo';
 
@@ -10,13 +10,14 @@ function Header() {
 	const [logoIndex, setLogoIndex] = useState(0);
 	console.log('Исполняется Header');
 
-	const toggleLogo = () => {
+	// Если зависимости не меняются, тогда мы запоминаем функцию
+	const toggleLogo = useCallback(() => {
 		setLogoIndex(state => Number(!state));
-	};
+	}, []);
 
 	return (
 		<>
-			<Logo image={logos[logoIndex]}/>
+			<Logo image={logos[0]}/>
 			<SelectUser/>
 			<Button onClick={toggleLogo}>Сменить логотип</Button>
 		</>
