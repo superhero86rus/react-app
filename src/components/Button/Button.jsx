@@ -1,9 +1,10 @@
 import './Button.css';
 
-function Button({ text, onClick }) {
+function Button({ children, onClick }) {
+	console.log('Исполняется Button');
 
 	return (
-		<button onClick={onClick} className='button accent'>{text}</button>
+		<button onClick={onClick} className='button accent'>{children}</button>
 	);
 }
 

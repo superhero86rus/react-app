@@ -43,6 +43,7 @@ function mapItems(items) {
 }
 
 function App() {
+	console.log('Исполняется App');
 
 	const [items, setItems] = useLocalStorage(['data']);
 
