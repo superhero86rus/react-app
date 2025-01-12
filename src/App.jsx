@@ -7,34 +7,14 @@ import JournalAddButton from './components/JournalAddButton/JournalAddButton';
 import JournalForm from './components/JournalForm/JournalForm';
 import { useLocalStorage } from './hooks/useLocalStorage.hook';
 import { UserContextProvider } from './context/user.context';
-
-// const INITIAL_DATA = [
-// {
-// 	id: 1,
-// 	title: 'Поход в горы',
-// 	post: 'Горные походы открывают удивительный ландшафт',
-// 	date: new Date()
-// },
-
-// {
-// 	id: 2, 
-// 	title: 'Катание на велосипеде',
-// 	post: 'Катание на велосипеде полезно для здоровья',
-// 	date: new Date()
-// },
-
-// {
-// 	id: 3,
-// 	title: 'Закаливание',
-// 	post: 'Принимать контрастный душ может быть не просто',
-// 	date: new Date()
-// }
-// ];
+import { useState } from 'react';
 
 function mapItems(items) {
 	if(!items){
 		return [];
 	}
+
+	console.log('Items: ' + JSON.stringify(items));
 
 	return items.map(i => ({
 		...i,
@@ -46,13 +26,31 @@ function App() {
 	console.log('Исполняется App');
 
 	const [items, setItems] = useLocalStorage(['data']);
+	const [selectedItem, setSelectedItem] = useState({});
 
 	const addItem = item => {
-		setItems([...mapItems(items), {
-			...item,
-			date: new Date(item.date),
-			id: Math.max(...items.map(i => i.id)) + 1
-		}]);
+
+		console.log('Add item: ' + item);
+
+		// Новый элемент
+		if(!item.id){
+			setItems([...mapItems(items), {
+				...item,
+				date: new Date(item.date),
+				id: items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1
+			}]);
+		} else { // Существующий элемент
+
+			setItems([...mapItems(items).map(i => {
+				if(i.id === item.id){
+					return {
+						...item
+					};
+				}
+
+				return i;
+			})]);
+		}
 	};
 	
 	return (
@@ -61,10 +59,10 @@ function App() {
 				<LeftPanel>
 					<Header/>
 					<JournalAddButton/>
-					<JournalList items={mapItems(items)}/>
+					<JournalList items={mapItems(items)} setItem={setSelectedItem}/>
 				</LeftPanel>
 				<Body>
-					<JournalForm onSubmit={addItem}/>
+					<JournalForm onSubmit={addItem} data={selectedItem}/>
 				</Body>
 			</div>
 		</UserContextProvider>

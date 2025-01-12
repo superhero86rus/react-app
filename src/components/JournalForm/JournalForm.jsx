@@ -9,7 +9,7 @@ import { INITIAL_STATE, formReducer} from './JournalForm.state';
 import Input from '../Input/Input';
 import { UserContext } from '../../context/user.context';
 
-function JournalForm({ onSubmit }) {
+function JournalForm({ onSubmit, data }) {
 
 	// Валидация полей
 	// const [formValidState, setFormValidState] = useState(INITIAL_STATE);
@@ -38,6 +38,10 @@ function JournalForm({ onSubmit }) {
 		}
 	};
 
+	useEffect(()=>{
+		dispatchForm({type: 'SET_VALUE', payload: {...data}});
+	}, [data]);
+
 	useEffect(() => {
 
 		let timerID;
@@ -61,10 +65,11 @@ function JournalForm({ onSubmit }) {
 		if(isFormReadyToSubmit) {
 			onSubmit(values);
 			dispatchForm({type: 'CLEAR'});
+			dispatchForm({type: 'SET_VALUE', payload: { userId }});
 			console.log('Clering state!');
 		}
 
-	}, [isFormReadyToSubmit, values, onSubmit]);
+	}, [isFormReadyToSubmit, values, onSubmit, userId]);
 
 	useEffect(() => {
 		dispatchForm({type: 'SET_VALUE', payload: { userId }});
@@ -91,7 +96,7 @@ function JournalForm({ onSubmit }) {
 
 			{/* Наименование */}
 			<div>
-				<Input type='text' ref={titleRef} isValid={isValid.title} onChange={onChange} value={values.title} name='title' appearance='title'/>
+				<Input appearance='title' type='text' ref={titleRef} isValid={isValid.title} onChange={onChange} value={values.title} name='title' appearance='title'/>
 			</div>
 
 			{/* Дата*/}
@@ -100,7 +105,8 @@ function JournalForm({ onSubmit }) {
 					<CalendarMonthIcon/>
 					<span>Дата</span>
 				</label>
-				<Input type='date' ref={dateRef} isValid={isValid.date} onChange={onChange} value={values.date} name='date' id='date' />
+				<Input type='date' ref={dateRef} isValid={isValid.date} onChange={onChange} 
+					value={values.date ? new Date(values.date).toISOString().slice(0, 10): ''} name='date' id='date' />
 			</div>
 
 			{/* Метки */}
